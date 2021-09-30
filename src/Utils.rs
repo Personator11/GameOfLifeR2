@@ -9,8 +9,6 @@ pub fn randomize_mat(array: &Vec<Vec<i8>>, radius: u32, chance: f64) -> Vec<Vec<
 
     let center_y = (array.len() as f32 / 2.0).round() as i32;
     let center_x = (array[0].len() as f32 / 2.0).round() as i32;
-    println!("{}", center_x);
-    println!("{}", center_y);
     let mut arr2 = array.clone();
     for y in 1..radius*2{
         for x in 1..radius*2{
@@ -23,6 +21,25 @@ pub fn randomize_mat(array: &Vec<Vec<i8>>, radius: u32, chance: f64) -> Vec<Vec<
                 let x_val = (center_x - radius as i32 + x as i32) as usize;
                 arr2[y_val][x_val]
                     = array[y_val][x_val];
+            }
+        }
+    }
+    return arr2;
+}
+
+pub fn randomize_entire_mat(array: &Vec<Vec<i8>>, chance: f64) -> Vec<Vec<i8>>{
+    let mut rng = rand::thread_rng();
+    let mut rn: f64;
+
+    let mut arr2 = array.clone();
+    for y in 1..array.len(){
+        for x in 1..array[y].len(){
+            rn = rng.gen();
+            if rn <= chance{
+                arr2[y][x] = 1;
+            }
+            else{
+                arr2[y][x] = array[y][x];
             }
         }
     }
