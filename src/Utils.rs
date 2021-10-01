@@ -101,3 +101,98 @@ pub fn update_cell(array: &Vec<&Vec<i8>>, pos_yr: &i64, pos_xr: &i64) -> i8{
 }
 
 
+pub fn update_toroidal(array: &Vec<&Vec<i8>>, pos_yr: &i64, pos_xr: &i64) -> i8{
+    let pos_y = *pos_yr;
+    let pos_x = *pos_xr;
+    let mut neighbors = 0;
+    if pos_y == 1{ //check top
+        neighbors += array[(array.len()-1) as usize][pos_x as usize];
+        if pos_x == 1{ // top left
+            neighbors += array[(array.len()-1) as usize][(array[pos_y as usize].len()-1) as usize];
+        }
+        else{ // top left across
+            neighbors += array[(array.len()-1) as usize][(pos_x -1) as usize];
+        }
+        if pos_x == (array[pos_y as usize].len() - 1 as usize) as i64{
+            neighbors += array[(array.len()-1) as usize][1 as usize];
+        }
+        else{ // top left across
+            neighbors += array[(array.len()-1) as usize][(pos_x +1) as usize];
+        }
+    }
+    else{ //check top across
+        neighbors += array[(pos_y -1) as usize][pos_x as usize];
+        if pos_x == 1{ // top left
+            neighbors += array[(pos_y-1) as usize][(array[pos_y as usize].len()-1) as usize];
+        }
+        else{ // top left across
+            neighbors += array[(pos_y -1) as usize][(pos_x -1) as usize];
+        }
+        if pos_x == (array[pos_y as usize].len() - 1 as usize) as i64{
+            neighbors += array[(pos_y-1) as usize][1 as usize];
+        }
+        else{ // top left across
+            neighbors += array[(pos_y -1) as usize][(pos_x +1) as usize];
+        }
+
+    }
+    if pos_y == (array.len() - 1) as i64{
+        neighbors += array[1 as usize][pos_x as usize];
+        if pos_x == 1{ // check bottom left
+            neighbors += array[1 as usize][(array[pos_y as usize].len() - 1 as usize) as usize];
+        }
+        else{
+            neighbors += array[1 as usize][(pos_x -1) as usize];
+        }
+        if pos_x == (array[pos_y as usize].len() - 1 as usize) as i64{
+            neighbors += array[1 as usize][1 as usize];
+        }
+        else{
+            neighbors += array[1 as usize][(pos_x + 1) as usize];
+        }
+    }
+    else{
+        neighbors += array[(pos_y +1) as usize][pos_x as usize];
+        if pos_x == 1{ // check bottom left
+            neighbors += array[(pos_y + 1) as usize][(array[pos_y as usize].len() - 1 as usize) as usize];
+        }
+        else{
+            neighbors += array[(pos_y +1) as usize][(pos_x -1) as usize];
+        }
+        if pos_x == (array[pos_y as usize].len() - 1) as i64 {
+            neighbors += array[(pos_y + 1) as usize][1 as usize];
+        }
+        else{
+            neighbors += array[(pos_y + 1) as usize][(pos_x + 1) as usize];
+        }
+
+    }
+    if pos_x == 1{
+        neighbors += array[pos_y as usize][(array[pos_y as usize].len() - 1) as usize];
+    }
+    else{
+
+        neighbors += array[pos_y as usize][(pos_x - 1) as usize];
+    }
+    if pos_x == (array[pos_y as usize].len() - 1 as usize) as i64{
+        neighbors += array[pos_y as usize][1 as usize];
+    }
+    else{
+        neighbors += array[pos_y as usize][(pos_x + 1) as usize];
+    }
+
+
+
+    return if neighbors < 2 {
+        0
+    } else if neighbors > 3 {
+        0
+    } else if array[pos_y as usize][pos_x as usize] == 1 && neighbors >= 2 && neighbors <= 3{
+        1
+    } else if array[pos_y as usize][pos_x as usize] == 0 && neighbors == 3{
+        1
+    } else {
+        0
+    }
+}
+

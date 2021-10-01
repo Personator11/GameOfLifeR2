@@ -11,15 +11,16 @@ use show_image::*;
 fn main() {
 
     let randomize_entire: bool = false;
-    let mut radius:u32 = 15;
-    let chance:f64 = 0.1;
+    let toroidal: bool = true;
+    let mut radius:u32 = 0;
+    let chance:f64 = 0.2;
     let framerate:i32 = 60;
-    const WIDTH: u32 = 640;
-    const HEIGHT: u32 = 360;
+    const WIDTH: u32 = 500;
+    const HEIGHT: u32 = 40;
 
 
     if radius >= min(HEIGHT,WIDTH){
-        radius = ((min(HEIGHT,WIDTH) as f64 / 2.0 ).floor() - 1.0) as u32;
+        radius = ((min(HEIGHT,WIDTH) as f64 / 2.0 ).floor() - 2.0) as u32;
     }
 
 
@@ -58,9 +59,19 @@ fn main() {
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
+/*
+    let init_cond:[[i8;8];8] =[
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,1,0,0,0,0],
+        [0,1,0,1,0,0,0,0],
+        [0,1,1,1,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0]
+    ];
 
-
-
+*/
 
     let mut init_vec: Vec<Vec<i8>> = vec![vec![0;WIDTH as usize]; HEIGHT as usize];
 
@@ -144,7 +155,12 @@ fn main() {
             for x in 1..main_array[y].len(){
                 let y_pos = y as i64;
                 let x_pos = x as i64;
-                main_array[y][x] = utils::update_cell(&temp2, &y_pos, &x_pos)
+                if toroidal{
+                    main_array[y][x] = utils::update_toroidal(&temp2, &y_pos, &x_pos);
+                }
+                else {
+                    main_array[y][x] = utils::update_cell(&temp2, &y_pos, &x_pos)
+                }
             }
         }
         thread::sleep(time::Duration::from_millis(((1.0/framerate as f64) * 1000.0) as u64));
